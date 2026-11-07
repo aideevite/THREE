@@ -2,69 +2,30 @@
 <html lang="en"> 
 <head> 
     <title>OFRENDA</title>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700&display=swap" rel="stylesheet">  <style>
-
-    body {
-       font-family: 'Bodoni Moda', serif;
-    }
-
-  #boton {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    cursor: pointer;
-
-    /*background-image: url('./assets/cementerio_hd.jpg.jpeg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;*/
-
-    font-family: 'Bodoni Moda', serif;
-    color: #f5e6c8;
-    font-size: 50px;
-    text-shadow: 2px 2px 6px black;
-}
-
-    #activ {
-        color: orange;
-        font-family: 'Nosifer', cursive;
-    }
-
-</style>
 </head>
 <body>
-<!--Boton para activar el pointerlock-->
-  <div id="boton">
-    Para comenzar da clic en + para activar <p id="activ">(  +   )</p>Mira al rededor usando el mouse, <br>pulsa Esc para parar
-  </div>
-    <!--Representa el contenido de un documento HTML-->
+    
 <canvas id="myCanvas">
     <!--El elemento HTML canvas se puede utilizar para dibujar gráficos a través de 
         secuencias de comandos (por lo general JavaScript ).-->
 </canvas>
+
+<!-- Aquí va todo el código de three.js -->
 <!-- script type="importmap" importa las librerías necesarias para three.js-->
-<script type="importmap">
+<script type="importmap"> 
     {
-      "imports": {
-        "three": "./js/three.module.js",
-        "three/PointerLockControls": "./js/PointerLockControls.js",
-        "three/interactive": "./js/three.interactive.js"
-      }
-    }
+        "imports":{
+            "three": "./js/three.module.js",
+            "three/OrbitControls": "./js/OrbitControls.js" 
+        }
+}
 </script>
 <script type="module"> 
 //🗃️🗃️ Mandar llamar a la librería
- // 📚  Librerías importadas 
-      import * as THREE from 'three';
-        import { InteractionManager } from 'three/interactive';
-        import { TWEEN } from './js/tween.module.min.js';
-        import { PointerLockControls } from 'three/PointerLockControls'; 
-
+    import * as THREE from 'three'; 
+    import {OrbitControls} from 'three/OrbitControls';
+    console.log(OrbitControls);
+    import {RoundedBoxGeometry} from "./js/RoundedBoxGeometry.js"
 
  import ESC01 from"./props/craneonew.js"
  import ESC02 from"./props/retrato.js"
@@ -96,61 +57,43 @@ import arbolf from"./props/arbol.js"
 import banco1 from"./props/bannco.js"
 import catri from"./props/CATRII.js"
 import conchap from"./props/conchaf.js"
-import rosa from"./props/flor.js"
 
-   
+
 //🕹️🕹️ Renderer - Realiza una conexión entre el código y el canvas
-        var renderer = new THREE.WebGLRenderer({
-        canvas: document.getElementById('myCanvas'),
-        antialias: true,
-      });
-      renderer.setPixelRatio(window.decivePixelRatio);
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setClearColor(0xf0048a);
+    var renderer = new THREE.WebGLRenderer({
+    canvas: document.getElementById('myCanvas'), antialias: true,
+    });
+    renderer.setPixelRatio(window.decivePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x69142B);
 
-       // 🎬 Creando nueva escena - Es el espacio donde se colocan los objetos
-      var scene = new THREE.Scene();
 
-         //🎥🎥 Agregar una cámara de perspectiva
-  
-           // Configuración de cámara y escenario //
 
-        var camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, .1, 20000);
+// 🎬 Creando nueva escena - Es el espacio donde se colocan los objetos
+    var scene = new THREE.Scene();
+
+//🎥🎥 Agregar una cámara de perspectiva
+    var camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,0.1,20000
+      );
+    scene.add(camera);
+
+    //Settings de la cámara
     camera.position.set(0, 1000, 2700);
 
-        // Agregar el pointlock //
-        var controls = new PointerLockControls( camera, renderer.domElement );
-        document.getElementById('activ').onclick=()=>{
-          controls.lock()
-        }
-        controls.addEventListener( 'lock', function () {
-          boton.style.display = 'none';
-        } );
-        controls.addEventListener( 'unlock', function () {
-          boton.style.display = '';
-        } );
-
-        ////////////// Añadir interactionManager //
-        var interactionManager = new InteractionManager(
-          renderer,
-          camera,
-          renderer.domElement
-        );
-
-        var scene =new THREE.Scene();
-      
-      //Settings de la cámara
-      camera.position.set(0, 580, 1780);
-
-      //GridHelper
-      const gridHelper = new THREE.GridHelper(50,50);
-      const axesHelper = new THREE.AxesHelper(50);
-     // scene.add (gridHelper);
-     // scene.add (axesHelper);
+    // Añadiendo los OrbitControls
+    var controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
 
  
 
 // Espacio para colocar los objetos
+// GridHelper
+/*var gridHelper = new THREE.GridHelper(50,50);
+scene.add(gridHelper);
+
+var axesHelper = new THREE.AxesHelper(50);
+scene.add(axesHelper);*/
 
 //TEXTURAS
 var loader = new THREE.TextureLoader();
@@ -2325,11 +2268,8 @@ puntoluz6.castShadow = true;
 
 var helper7 = new THREE.SpotLightHelper(puntoluz6);
 //scene.add(helper7);
-puntoluz6.position.set(800, 1000, -1600);
+puntoluz6.position.set(800, 900, -1600);
 puntoluz6.target.position.set(800, 100, -1600);
-
-
-////
 
 const far=faro1({X:-20,Y:0,Z:-20});
 scene.add(far);
@@ -2337,7 +2277,6 @@ far.position.set(1185, 0, 400);
 far.rotation.y = Math.PI ;
 far.scale.set(100, 230, 150);
 far.castShadow = true;
-
 
 const far1=faro1({X:-20,Y:0,Z:-20});
 scene.add(far1);
@@ -2445,386 +2384,22 @@ co.position.set(0, 0, 850);
 co.scale.set(25,25,25);
 
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////// MOVIMIENTO
-
-
-const uno=rosa({X:50, Y:0, Z:50});
-scene.add(uno);
-uno.position.set(450,-30,1300);
-uno.scale.set(20,20,20);
-
-const dos=rosa({X:50, Y:0, Z:50});
-scene.add(dos);
-dos.position.set(450,-30,700);
-dos.scale.set(20,20,20);
-
-const tres=rosa({X:50, Y:0, Z:50});
-scene.add(tres);
-tres.position.set(450,-30,100);
-tres.scale.set(20,20,20);
-
-const cuatro=rosa({X:50, Y:0, Z:50});
-scene.add(cuatro);
-cuatro.position.set(1000,-30,-300);
-cuatro.scale.set(20,20,20);
-
-const cinco=rosa({X:50, Y:0, Z:50});
-scene.add(cinco);
-cinco.position.set(600,-30,-900);
-cinco.scale.set(20,20,20);
-
-const uno1=rosa({X:50, Y:0, Z:50});
-scene.add(uno1);
-uno1.position.set(-450,-30,1300);
-uno1.scale.set(20,20,20);
-
-const dos1=rosa({X:50, Y:0, Z:50});
-scene.add(dos1);
-dos1.position.set(-450,-30,700);
-dos1.scale.set(20,20,20);
-
-const tres1=rosa({X:50, Y:0, Z:50});
-scene.add(tres1);
-tres1.position.set(-450,-30,100);
-tres1.scale.set(20,20,20);
-
-const cuatro1=rosa({X:50, Y:0, Z:50});
-scene.add(cuatro1);
-cuatro1.position.set(-1000,-30,-300);
-cuatro1.scale.set(20,20,20);
-
-const cinco1=rosa({X:50, Y:0, Z:50});
-scene.add(cinco1);
-cinco1.position.set(-600,-30,-900);
-cinco1.scale.set(20,20,20);
-
-
-
-    // Inician las interacciones //
-        //Se añade el "evento" mouse arriba, mouse se retira, click
-uno.addEventListener('mouseover', (event) => {
-    document.body.style.cursor = 'pointer';
-    uno.scale.set(24,24,24);
-});
-
-uno.addEventListener('mouseout', (event) => {
-    document.body.style.cursor = 'default';
-    uno.scale.set(20,20,20);
-});
-
-uno.addEventListener('click', (event) => {
-
-    var coords = {
-        x: camera.position.x,
-        y: camera.position.y,
-        z: camera.position.z
-    };
-
-    new TWEEN.Tween(coords)
-    .to({x:450, y:580, z:1300}, 2000)
-    .onUpdate(() => {
-        camera.position.set(coords.x,coords.y,coords.z);
-    })
-    .start();
-
-});
-
-dos.addEventListener('mouseover', (event) => {
-    document.body.style.cursor = 'pointer';
-    dos.scale.set(24,24,24);
-});
-
-dos.addEventListener('mouseout', (event) => {
-    document.body.style.cursor = 'default';
-    dos.scale.set(20,20,20);
-});
-
-dos.addEventListener('click', (event) => {
-
-    var coords = {
-        x: camera.position.x,
-        y: camera.position.y,
-        z: camera.position.z
-    };
-
-    new TWEEN.Tween(coords)
-    .to({x:450, y:580, z:700}, 2000)
-    .onUpdate(() => {
-        camera.position.set(coords.x,coords.y,coords.z);
-    })
-    .start();
-
-});
-
-
-tres.addEventListener('mouseover', (event) => {
-    document.body.style.cursor = 'pointer';
-    tres.scale.set(24,24,24);
-});
-
-tres.addEventListener('mouseout', (event) => {
-    document.body.style.cursor = 'default';
-    tres.scale.set(20,20,20);
-});
-
-tres.addEventListener('click', (event) => {
-
-    var coords = {
-        x: camera.position.x,
-        y: camera.position.y,
-        z: camera.position.z
-    };
-
-    new TWEEN.Tween(coords)
-    .to({x:450, y:580, z:100}, 2000)
-    .onUpdate(() => {
-        camera.position.set(coords.x,coords.y,coords.z);
-    })
-    .start();
-
-});
-
-cuatro.addEventListener('mouseover', (event) => {
-    document.body.style.cursor = 'pointer';
-    cuatro.scale.set(24,24,24);
-});
-
-cuatro.addEventListener('mouseout', (event) => {
-    document.body.style.cursor = 'default';
-    cuatro.scale.set(20,20,20);
-});
-
-cuatro.addEventListener('click', (event) => {
-
-    var coords = {
-        x: camera.position.x,
-        y: camera.position.y,
-        z: camera.position.z
-    };
-
-    new TWEEN.Tween(coords)
-    .to({x:1000, y:580, z:-300}, 2000)
-    .onUpdate(() => {
-        camera.position.set(coords.x,coords.y,coords.z);
-    })
-    .start();
-
-});
-
-cinco.addEventListener('mouseover', (event) => {
-    document.body.style.cursor = 'pointer';
-    cinco.scale.set(24,24,24);
-});
-
-cinco.addEventListener('mouseout', (event) => {
-    document.body.style.cursor = 'default';
-    cinco.scale.set(20,20,20);
-});
-
-cinco.addEventListener('click', (event) => {
-
-    var coords = {
-        x: camera.position.x,
-        y: camera.position.y,
-        z: camera.position.z
-    };
-
-    new TWEEN.Tween(coords)
-    .to({x:600, y:580, z:-900}, 2000)
-    .onUpdate(() => {
-        camera.position.set(coords.x,coords.y,coords.z);
-    })
-    .start();
-
-});
-
-uno1.addEventListener('mouseover', (event) => {
-    document.body.style.cursor = 'pointer';
-    uno1.scale.set(24,24,24);
-});
-
-uno1.addEventListener('mouseout', (event) => {
-    document.body.style.cursor = 'default';
-    uno1.scale.set(20,20,20);
-});
-
-uno1.addEventListener('click', (event) => {
-
-    var coords = {
-        x: camera.position.x,
-        y: camera.position.y,
-        z: camera.position.z
-    };
-
-    new TWEEN.Tween(coords)
-    .to({x:-450, y:580, z:1300}, 2000)
-    .onUpdate(() => {
-        camera.position.set(coords.x,coords.y,coords.z);
-    })
-    .start();
-
-});
-
-dos1.addEventListener('mouseover', (event) => {
-    document.body.style.cursor = 'pointer';
-    dos1.scale.set(24,24,24);
-});
-
-dos1.addEventListener('mouseout', (event) => {
-    document.body.style.cursor = 'default';
-    dos.scale.set(20,20,20);
-});
-
-dos1.addEventListener('click', (event) => {
-
-    var coords = {
-        x: camera.position.x,
-        y: camera.position.y,
-        z: camera.position.z
-    };
-
-    new TWEEN.Tween(coords)
-    .to({x:-450, y:580, z:700}, 2000)
-    .onUpdate(() => {
-        camera.position.set(coords.x,coords.y,coords.z);
-    })
-    .start();
-
-});
-
-
-tres1.addEventListener('mouseover', (event) => {
-    document.body.style.cursor = 'pointer';
-    tres1.scale.set(24,24,24);
-});
-
-tres1.addEventListener('mouseout', (event) => {
-    document.body.style.cursor = 'default';
-    tres1.scale.set(20,20,20);
-});
-
-tres1.addEventListener('click', (event) => {
-
-    var coords = {
-        x: camera.position.x,
-        y: camera.position.y,
-        z: camera.position.z
-    };
-
-    new TWEEN.Tween(coords)
-    .to({x:-450, y:580, z:100}, 2000)
-    .onUpdate(() => {
-        camera.position.set(coords.x,coords.y,coords.z);
-    })
-    .start();
-
-});
-
-cuatro1.addEventListener('mouseover', (event) => {
-    document.body.style.cursor = 'pointer';
-    cuatro1.scale.set(24,24,24);
-});
-
-cuatro1.addEventListener('mouseout', (event) => {
-    document.body.style.cursor = 'default';
-    cuatro1.scale.set(20,20,20);
-});
-
-cuatro1.addEventListener('click', (event) => {
-
-    var coords = {
-        x: camera.position.x,
-        y: camera.position.y,
-        z: camera.position.z
-    };
-
-    new TWEEN.Tween(coords)
-    .to({x:-1000, y:580, z:-300}, 2000)
-    .onUpdate(() => {
-        camera.position.set(coords.x,coords.y,coords.z);
-    })
-    .start();
-
-});
-
-cinco1.addEventListener('mouseover', (event) => {
-    document.body.style.cursor = 'pointer';
-    cinco1.scale.set(24,24,24);
-});
-
-cinco1.addEventListener('mouseout', (event) => {
-    document.body.style.cursor = 'default';
-    cinco1.scale.set(20,20,20);
-});
-
-cinco1.addEventListener('click', (event) => {
-
-    var coords = {
-        x: camera.position.x,
-        y: camera.position.y,
-        z: camera.position.z
-    };
-
-    new TWEEN.Tween(coords)
-    .to({x:-600, y:580, z:-900}, 2000)
-    .onUpdate(() => {
-        camera.position.set(coords.x,coords.y,coords.z);
-    })
-    .start();
-
-});
-
-        
-//////// FIN INTERACCION
-
-        /////////
-        interactionManager.add(uno); ////////////// Añadir el elemento que se quiere animar al interactionmanager, si no se respetan las interacciones
-        interactionManager.add(dos);
-        interactionManager.add(tres);
-        interactionManager.add(cuatro);
-        interactionManager.add(cinco);
-        interactionManager.add(uno1); ////////////// Añadir el elemento que se quiere animar al interactionmanager, si no se respetan las interacciones
-        interactionManager.add(dos1);
-        interactionManager.add(tres1);
-        interactionManager.add(cuatro1);
-        interactionManager.add(cinco1);
-
-//// CRUZ CENTRAL QUE SIRVE DE GUIA
-        var geometryx = new THREE.BoxGeometry(.0075, .05, .075);
-        var materialx = new THREE.MeshNormalMaterial({side:THREE.DoubleSide});
-        var meshx = new THREE.Mesh(geometryx, materialx);
-        meshx.position.set(0,0,-1);
-
-        var geometryx2 = new THREE.BoxGeometry(.05, .0075, .075);
-        var meshx2 = new THREE.Mesh(geometryx2, materialx);
-        meshx2.position.set(0,0,-1);
-        scene.add( camera );
-        camera.add( meshx, meshx2 );
-
-
-
 //🎰🎰Rendering y animación
     requestAnimationFrame(render);
     function render() {
     //🪄🪄 Animación - 
 ba.rotation.y += 0.005;
-ba1.rotation.y += 0.005; 
+ba1.rotation.y += 0.005;
 
 
- TWEEN.update()  //se agrega la transición del tween a functionrender para que genere la animación el movimiento suave
 
-    interactionManager.update();////// sedebe actualizar el interaction manager en las animaciones
 
-      //🪄🪄 Animación - 
-  
-      //🎮🎮Actualización del OrbitControls para generar la suavidad de movimiento
-      //controls.update();
 
-      //Llamado para renderizar y volver a llamar a la misma función (render)
-      renderer.render(scene, camera);
-      requestAnimationFrame(render);
+    //🎮🎮Actualización del OrbitControls para generar la suavidad de movimiento
+    controls.update();
+    //Llamado para renderizar y volver a llamar a la misma función (render)
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
     }
 </script>
 </body>
